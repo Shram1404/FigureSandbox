@@ -1,0 +1,40 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        x:Class="FigureSandbox.MainWindow"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" 
+        MinWidth="380" MinHeight="320">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200*"/>
+            <ColumnDefinition Width="408*"/>
+            <ColumnDefinition Width="193*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="8*"/>
+        </Grid.RowDefinitions>
+
+        <ComboBox x:Name="LanguageComboBox" SelectionChanged="LanguageComboBox_SelectionChanged" Margin="5,5,5,5">
+            <ComboBoxItem>en-US</ComboBoxItem>
+            <ComboBoxItem>uk-UA</ComboBoxItem>
+        </ComboBox>
+
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" Margin="10,5,10,5" Grid.ColumnSpan="2">
+            <Button x:Name="AddRectangleButton" Content ="Add rectangle" Click="AddRectangle_Click" Margin="5,0"/>
+            <Button x:Name="AddCircleButton" Content="Add circle" Click="AddCircle_Click" Margin="5,0"/>
+            <Button x:Name="AddTriangleButton" Content="Add triangle" Click="AddTriangle_Click" Margin="5,0"/>
+            <Button x:Name="ToggleMoveButton" Content="Stop figure" Click="ToggleMove_Click" Margin="5,0"/>
+        </StackPanel>
+
+        <TreeView x:Name="FiguresTree" Grid.Column="0" Margin="0,48,0,0" Grid.RowSpan="2"/>
+
+        <Border BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,48,0,0" Grid.RowSpan="2">
+            <Canvas x:Name="FiguresCanvas"/>
+        </Border>
+
+    </Grid>
+</Window>
