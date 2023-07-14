@@ -1,4 +1,6 @@
-﻿using FigureSandbox.Entities;
+﻿using FigureSandbox.Entities.Figures;
+using FigureSandbox.Resources;
+using FigureSandbox.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -6,17 +8,18 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using FigureSandbox.Resources;
 
 namespace FigureSandbox;
 
 public partial class MainWindow : Window
 {
-    readonly DispatcherTimer timer;
-    readonly Dictionary<string, TreeViewItem> figureNodes = new();
+    public static MainWindow Instance { get; private set; } = null!;
 
-    readonly List<Entities.Figure> figures = new();
-    readonly List<Entities.Figure> stoppedFigures = new();
+    readonly DispatcherTimer timer;
+    Dictionary<string, TreeViewItem> figureNodes = new();
+
+    List<Figure> figures = new();
+    List<Figure> stoppedFigures = new();
 
     private Figure? SelectedFigure => (FiguresTree.SelectedItem as TreeViewItem)?.Tag as Figure;
 
@@ -36,21 +39,47 @@ public partial class MainWindow : Window
 
         FiguresTree.SelectedItemChanged += ToggleMoveButtonName;
 
+        Instance = this;
         DataContext = this;
     }
 
-    private void AddRectangle_Click(object sender, RoutedEventArgs e)
+    public void AddFigure(Figure figure)
     {
-        AddFigure(new Rectangle(FiguresCanvas));
+        figures.Add(figure);
+        AddTreeNode(figure);
     }
-    private void AddCircle_Click(object sender, RoutedEventArgs e)
+    public void ClearFigures()
     {
-        AddFigure(new Circle(FiguresCanvas));
+        figures = new List<Figure>();
+        stoppedFigures = new List<Figure>();
+        FiguresCanvas.Children.Clear();
+        FiguresTree.Items.Clear();
+        figureNodes.Clear();
     }
-    private void AddTriangle_Click(object sender, RoutedEventArgs e)
+    public void AddTreeNode(Figure figure)
     {
-        AddFigure(new Triangle(FiguresCanvas));
+        string figureType = figure.GetType().Name;
+        string localizedFigureType = Resource.ResourceManager.GetString(figureType);
+
+        if (!figureNodes.ContainsKey(figureType))
+        {
+            TreeViewItem item = new TreeViewItem() { Header = localizedFigureType };
+            FiguresTree.Items.Add(item);
+            figureNodes[figureType] = item;
+        }
+
+        TreeViewItem node = new TreeViewItem() { Header = localizedFigureType, Tag = figure };
+        figureNodes[figureType].Items.Add(node);
     }
+
+    private void OpenFileMenu_Click(object sender, RoutedEventArgs e) => FigureMenuManager.OpenFiguresFromFile(Instance, FiguresCanvas, ref figures, ref stoppedFigures);
+    private void SaveAsBinaryMenu_Click(object sender, RoutedEventArgs e) => FigureMenuManager.SaveAsBin(figures, stoppedFigures);
+    private void SaveAsJsonMenu_Click(object sender, RoutedEventArgs e) => FigureMenuManager.SaveAsJson(figures, stoppedFigures);
+    private void SaveAsXmlMenu_Click(object sender, RoutedEventArgs e) => FigureMenuManager.SaveAsXml(figures, stoppedFigures);
+
+    private void AddRectangle_Click(object sender, RoutedEventArgs e) => AddFigure(new Rectangle(FiguresCanvas));
+    private void AddCircle_Click(object sender, RoutedEventArgs e) => AddFigure(new Circle(FiguresCanvas));
+    private void AddTriangle_Click(object sender, RoutedEventArgs e) => AddFigure(new Triangle(FiguresCanvas));
     private void ToggleMove_Click(object sender, RoutedEventArgs e)
     {
         if (SelectedFigure != null)
@@ -58,12 +87,6 @@ public partial class MainWindow : Window
             ToggleMoveForFigure(SelectedFigure);
             ToggleMoveButtonName(sender, null);
         }
-    }
-
-    private void AddFigure(Figure figure)
-    {
-        figures.Add(figure);
-        AddTreeNode(figure);
     }
 
     private void ToggleMoveForFigure(Figure figure)
@@ -90,23 +113,6 @@ public partial class MainWindow : Window
                 ToggleMoveButton.Content = Resource.StartFigureButton;
         }
     }
-
-    private void AddTreeNode(Figure figure)
-    {
-        string figureType = figure.GetType().Name;
-        string localizedFigureType = Resource.ResourceManager.GetString(figureType);
-
-        if (!figureNodes.ContainsKey(figureType))
-        {
-            TreeViewItem item = new TreeViewItem() { Header = localizedFigureType };
-            FiguresTree.Items.Add(item);
-            figureNodes[figureType] = item;
-        }
-
-        TreeViewItem node = new TreeViewItem() { Header = localizedFigureType, Tag = figure };
-        figureNodes[figureType].Items.Add(node);
-    }
-
     private void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (LanguageComboBox.SelectedItem is ComboBoxItem selectedItem && selectedItem.Content is string cultureName)

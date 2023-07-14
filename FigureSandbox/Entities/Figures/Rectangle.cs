@@ -1,10 +1,12 @@
 ﻿using FigureSandbox.Tools;
+using System;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace FigureSandbox.Entities;
+namespace FigureSandbox.Entities.Figures;
 
+[Serializable]
 public class Rectangle : Figure
 {
     static PointCollection _points = new PointCollection();
@@ -17,7 +19,23 @@ public class Rectangle : Figure
         _points.Add(new System.Windows.Point(100, 0));
     }
 
-    public Rectangle(Canvas canvas) => Draw(canvas);
+    public Rectangle() { }
+    public Rectangle(Canvas canvas)
+    {
+        Draw(canvas);
+        Type = "Rectangle";
+    }
+
+    public Rectangle(Canvas canvas, int x, int y, int[] speed)
+    {
+        Type = "Rectangle";
+        PosX = x;
+        PosY = y;
+        Speed = speed;
+        Draw(canvas);
+        Canvas.SetLeft(shape, x);
+        Canvas.SetTop(shape, y);
+    }
 
     public override void Draw(Canvas canvas)
     {

@@ -1,19 +1,39 @@
 ﻿using FigureSandbox.Tools;
 using System;
+using System.Runtime.Serialization;
 using System.Windows.Controls;
 using System.Windows.Shapes;
+using System.Xml.Serialization;
 
-namespace FigureSandbox.Entities;
+namespace FigureSandbox.Entities.Figures;
 
+[KnownType(typeof(Circle))]
+[KnownType(typeof(Rectangle))]
+[KnownType(typeof(Triangle))]
+[XmlInclude(typeof(Triangle))]
+[XmlInclude(typeof(Circle))]
+[XmlInclude(typeof(Rectangle))]
+[DataContract]
+[Serializable]
 public abstract class Figure
 {
-    private readonly int maxSpeed = 5;
-    protected int[] _speed = new int[2];
+    [DataMember]
+    public int[] Speed { get; set; } = new int[2];
+    [DataMember]
+    public double PosX { get; set; }
+    [DataMember]
+    public double PosY { get; set; }
+    [DataMember]
+    public string Type { get; set; }
+
+
+    [NonSerialized]
     protected Shape shape;
 
     protected Figure()
     {
-        FigureRandomProperty.SetRandomSpeed(_speed);
+        if (Speed[0] == 0)
+            FigureRandomProperty.SetRandomSpeed(Speed);
     }
 
     public abstract void Draw(Canvas canvas);
@@ -24,14 +44,17 @@ public abstract class Figure
         double y = Canvas.GetTop(shape);
 
         if (x <= 0 || x >= canvas.ActualWidth - shape.ActualWidth)
-            _speed[0] = -_speed[0];
+            Speed[0] = -Speed[0];
         if (y <= 0 || y >= canvas.ActualHeight - shape.ActualHeight)
-            _speed[1] = -_speed[1];
+            Speed[1] = -Speed[1];
 
-        x += _speed[0];
-        y += _speed[1];
+        x += Speed[0];
+        y += Speed[1];
 
         FreeFigureOutsideBounds(canvas, ref x, ref y);
+
+        PosX = x;
+        PosY = y;
 
         Canvas.SetLeft(shape, x);
         Canvas.SetTop(shape, y);

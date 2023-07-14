@@ -6,35 +6,64 @@
         x:Class="FigureSandbox.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" 
-        MinWidth="380" MinHeight="320">
+        MinWidth="320" MinHeight="240">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200*"/>
-            <ColumnDefinition Width="408*"/>
-            <ColumnDefinition Width="193*"/>
+            <ColumnDefinition Width="1*" MaxWidth="200"/>
+            <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="8*"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="2*" MinHeight="48" MaxHeight="68"/>
+            <RowDefinition Height="15*"/>
         </Grid.RowDefinitions>
 
-        <ComboBox x:Name="LanguageComboBox" SelectionChanged="LanguageComboBox_SelectionChanged" Margin="5,5,5,5">
+        <Menu Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0">
+            <MenuItem Header="File" x:Uid="MenuFile">
+                <MenuItem Header="Open" 
+                          Click="OpenFileMenu_Click" 
+                          x:Uid="MenuOpen"/>
+                <MenuItem Header="Save" x:Uid="MenuSave">
+                    <MenuItem Header="Save as JSON" Click="SaveAsJsonMenu_Click" x:Uid="MenuSaveAsJson"/>
+                    <MenuItem Header="Save as BIN" Click="SaveAsBinaryMenu_Click" x:Uid="MenuSaveAsBin"/>
+                    <MenuItem Header="Save as XML" Click="SaveAsXmlMenu_Click" x:Uid="MenuSaveAsXml"/>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+
+        <ComboBox x:Name="LanguageComboBox" 
+                  Grid.Column="0"
+                  Grid.Row="1"
+                  SelectionChanged="LanguageComboBox_SelectionChanged" 
+                  Margin="5,5,5,0"
+                  Height="20"
+                  VerticalAlignment="Top">
+
             <ComboBoxItem>en-US</ComboBoxItem>
             <ComboBoxItem>uk-UA</ComboBoxItem>
         </ComboBox>
 
-        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" Margin="10,5,10,5" Grid.ColumnSpan="2">
-            <Button x:Name="AddRectangleButton" Content ="Add rectangle" Click="AddRectangle_Click" Margin="5,0"/>
-            <Button x:Name="AddCircleButton" Content="Add circle" Click="AddCircle_Click" Margin="5,0"/>
-            <Button x:Name="AddTriangleButton" Content="Add triangle" Click="AddTriangle_Click" Margin="5,0"/>
-            <Button x:Name="ToggleMoveButton" Content="Stop figure" Click="ToggleMove_Click" Margin="5,0"/>
-        </StackPanel>
+        <WrapPanel Grid.Column="1" 
+                   Grid.Row="1" 
+                   Margin="10,5,10,0" 
+                   Orientation="Horizontal" 
+                   VerticalAlignment="Top">
+            <Button x:Name="AddRectangleButton" Content ="Add rectangle" Click="AddRectangle_Click" Margin="5,0,0,2" Height="20"/>
+            <Button x:Name="AddCircleButton" Content="Add circle" Click="AddCircle_Click" Margin="5,0,0,2" Height="20"/>
+            <Button x:Name="AddTriangleButton" Content="Add triangle" Click="AddTriangle_Click" Margin="5,0,0,2" Height="20"/>
+            <Button x:Name="ToggleMoveButton" Content="Stop figure" Click="ToggleMove_Click" Margin="5,0,0,2" Height="20"/>
+        </WrapPanel>
 
-        <TreeView x:Name="FiguresTree" Grid.Column="0" Margin="0,48,0,0" Grid.RowSpan="2"/>
+        <TreeView x:Name="FiguresTree" 
+                  Grid.Column="0" Grid.Row="2"/>
 
-        <Border BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,48,0,0" Grid.RowSpan="2">
+        <Border BorderBrush="Black"
+                BorderThickness="0,1,1,1" 
+                Grid.Column="1" 
+                Grid.Row="2">
             <Canvas x:Name="FiguresCanvas"/>
         </Border>
+
 
     </Grid>
 </Window>

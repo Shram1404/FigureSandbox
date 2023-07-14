@@ -97,6 +97,60 @@ namespace FigureSandbox.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на File.
+        /// </summary>
+        internal static string MenuFile_Header {
+            get {
+                return ResourceManager.GetString("MenuFile.Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Open.
+        /// </summary>
+        internal static string MenuOpen_Header {
+            get {
+                return ResourceManager.GetString("MenuOpen.Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Save.
+        /// </summary>
+        internal static string MenuSave_Header {
+            get {
+                return ResourceManager.GetString("MenuSave.Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Save as BIN.
+        /// </summary>
+        internal static string MenuSaveAsBin_Header {
+            get {
+                return ResourceManager.GetString("MenuSaveAsBin.Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Save as JSON.
+        /// </summary>
+        internal static string MenuSaveAsJson_Header {
+            get {
+                return ResourceManager.GetString("MenuSaveAsJson.Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Save as XML.
+        /// </summary>
+        internal static string MenuSaveAsXml_Header {
+            get {
+                return ResourceManager.GetString("MenuSaveAsXml.Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Rectangle.
         /// </summary>
         internal static string Rectangle {

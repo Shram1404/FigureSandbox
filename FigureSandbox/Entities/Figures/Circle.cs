@@ -1,13 +1,30 @@
 ﻿using FigureSandbox.Tools;
+using System;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace FigureSandbox.Entities;
+namespace FigureSandbox.Entities.Figures;
 
+[Serializable]
 public class Circle : Figure
 {
-    public Circle(Canvas canvas) => Draw(canvas);
+    public Circle() { }
+    public Circle(Canvas canvas)
+    {
+        Draw(canvas);
+        Type = "Circle";
+    }
+    public Circle(Canvas canvas, int x, int y, int[] speed)
+    {
+        Type = "Circle";
+        PosX = x;
+        PosY = y;
+        Speed = speed;
+        Draw(canvas);
+        Canvas.SetLeft(shape, x);
+        Canvas.SetTop(shape, y);
+    }
 
     public override void Draw(Canvas canvas)
     {
