@@ -9,7 +9,7 @@ namespace FigureSandbox.Entities.Figures;
 [Serializable]
 public class Rectangle : Figure
 {
-    static PointCollection _points = new PointCollection();
+    static PointCollection _points = new();
 
     static Rectangle()
     {

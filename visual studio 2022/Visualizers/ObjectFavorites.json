@@ -1,6 +1,11 @@
 {
   "$schema": "https://aka.ms/vs/debugger-managed-favorites-schema",
   "types": {
+    "FigureSandbox.MainWindow": {
+      "favorites": [
+        "_figuresWithEventsCount"
+      ]
+    },
     "System.Windows.Shapes.Polygon": {
       "favorites": [
         "ActualWidth"

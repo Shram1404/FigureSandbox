@@ -52,6 +52,8 @@
             <Button x:Name="AddCircleButton" Content="Add circle" Click="AddCircle_Click" Margin="5,0,0,2" Height="20"/>
             <Button x:Name="AddTriangleButton" Content="Add triangle" Click="AddTriangle_Click" Margin="5,0,0,2" Height="20"/>
             <Button x:Name="ToggleMoveButton" Content="Stop figure" Click="ToggleMove_Click" Margin="5,0,0,2" Height="20"/>
+            <Button x:Name="AddHandlerButton" Content="+" Click="AddHandlerButton_Click" Margin="5,0,0,2" Height="20" Width="20"/>
+            <Button x:Name="RemoveHandlerButton" Content="-" Click="RemoveHandlerButton_Click" Margin="5,0,0,2" Height="20" Width="20"/>
         </WrapPanel>
 
         <TreeView x:Name="FiguresTree" 

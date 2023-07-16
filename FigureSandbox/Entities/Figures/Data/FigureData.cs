@@ -1,5 +1,4 @@
-﻿using FigureSandbox.Entities.Figures;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -23,5 +22,5 @@ public class FigureData
         Figures = figures;
         StopedFigures = stopedFigures;
     }
-    
+
 }

@@ -11,16 +11,11 @@ using System.Xml.Serialization;
 
 namespace FigureSandbox.Services;
 
-public static class FigureMenuManager
+public static class FigureFileMenuManager
 {
-    private static MainWindow? mainWindow;
+    private static MainWindow mainWindow;
 
-    public static void OpenFiguresFromFile(
-        MainWindow instance,
-        Canvas canvas,
-        ref List<Figure> figures,
-        ref List<Figure> stoppedFigures,
-        ref Dictionary<string, TreeViewItem> figureNodes)
+    public static void OpenFiguresFromFile(MainWindow instance, Canvas canvas, ref List<Figure> figures, ref List<Figure> stoppedFigures)
     {
         var openFileDialog = new OpenFileDialog();
         openFileDialog.Filter = "All files (*.*)|*.*";
@@ -47,7 +42,6 @@ public static class FigureMenuManager
 #pragma warning restore SYSLIB0011 // Тип или член устарел
         });
     }
-
     public static void SaveAsJson(List<Figure> figures, List<Figure> stoppedFigures)
     {
         SaveData(figures, stoppedFigures, "JSON files (*.json)|*.json", ".json", (stream, data) =>
@@ -56,7 +50,6 @@ public static class FigureMenuManager
             jsonFormatter.WriteObject(stream, data);
         });
     }
-
     public static void SaveAsXml(List<Figure> figures, List<Figure> stoppedFigures)
     {
         SaveData(figures, stoppedFigures, "XML files (*.xml)|*.xml", ".xml", (stream, data) =>
@@ -89,13 +82,11 @@ public static class FigureMenuManager
         DataContractJsonSerializer jsonSerializer = new(typeof(FigureData));
         return (FigureData)jsonSerializer.ReadObject(stream) ?? throw new ArgumentException("Failed to deserialize file");
     }
-
     private static FigureData LoadFromXml(Stream stream)
     {
         XmlSerializer xmlSerializer = new(typeof(FigureData));
         return (FigureData)xmlSerializer.Deserialize(stream) ?? throw new ArgumentException("Failed to deserialize file");
     }
-
     private static FigureData LoadFromBin(Stream stream)
     {
         BinaryFormatter binaryFormatter = new();
@@ -120,7 +111,6 @@ public static class FigureMenuManager
             mainWindow.AddTreeNode(figure);
         }
     }
-
     private static Figure CreateFigure(Canvas canvas, Figure figureData)
     {
         Figure figure;
