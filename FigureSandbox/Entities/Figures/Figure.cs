@@ -1,4 +1,5 @@
 ﻿using FigureSandbox.Events;
+using FigureSandbox.Exceptions;
 using FigureSandbox.Tools;
 using System;
 using System.Runtime.Serialization;
@@ -59,30 +60,33 @@ public abstract class Figure
 
     public void Move(Canvas canvas)
     {
-        double x = Canvas.GetLeft(shape);
-        double y = Canvas.GetTop(shape);
+        PosX = Canvas.GetLeft(shape);
+        PosY = Canvas.GetTop(shape);
 
-        if (x <= 0 || x >= canvas.ActualWidth - shape.ActualWidth)
+        if (PosX <= 0 || PosX >= canvas.ActualWidth - (shape.ActualWidth))
             Speed[0] = -Speed[0];
-        if (y <= 0 || y >= canvas.ActualHeight - shape.ActualHeight)
+        if (PosY <= 0 || PosY >= canvas.ActualHeight - (shape.ActualHeight))
             Speed[1] = -Speed[1];
 
-        x += Speed[0];
-        y += Speed[1];
+        PosX += Speed[0];
+        PosY += Speed[1];
 
-        if (x <= 0 || x >= canvas.ActualWidth - shape.ActualWidth || y <= 0 || y >= canvas.ActualHeight - shape.ActualHeight)
-            FreeFigureOutsideBounds(canvas, ref x, ref y);
-
-        PosX = x;
-        PosY = y;
-
-        Canvas.SetLeft(shape, x);
-        Canvas.SetTop(shape, y);
+        if (PosX < 0 || PosX > canvas.ActualWidth - shape.ActualWidth || PosY < 0 || PosY > canvas.ActualHeight - shape.ActualHeight)
+            throw new FigureOutOfBoundsException(this);
     }
 
-    private void FreeFigureOutsideBounds(Canvas canvas, ref double x, ref double y)
+    public void UpdatePositions(Canvas canvas)
     {
-        x = Math.Clamp(x, 0, canvas.ActualWidth - shape.ActualWidth);
-        y = Math.Clamp(y, 0, canvas.ActualHeight - shape.ActualHeight);
+        canvas.Dispatcher.BeginInvoke(new Action(() =>
+        {
+            Canvas.SetLeft(shape, PosX);
+            Canvas.SetTop(shape, PosY);
+        }));
+    }
+
+    public void FreeFigureOutsideBounds(Canvas canvas)
+    {
+        PosX = Math.Clamp(PosX, 0, canvas.ActualWidth - shape.ActualWidth);
+        PosY = Math.Clamp(PosY, 0, canvas.ActualHeight - shape.ActualHeight);
     }
 }

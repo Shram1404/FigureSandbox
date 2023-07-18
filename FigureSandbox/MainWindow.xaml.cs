@@ -1,11 +1,14 @@
 ﻿using FigureSandbox.Entities.Figures;
+using FigureSandbox.Exceptions;
 using FigureSandbox.Resources;
 using FigureSandbox.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -82,7 +85,12 @@ public partial class MainWindow : Window
     private void SaveAsJsonMenu_Click(object sender, RoutedEventArgs e) => FigureFileMenuManager.SaveAsJson(_movedFigures, _stoppedFigures);
     private void SaveAsXmlMenu_Click(object sender, RoutedEventArgs e) => FigureFileMenuManager.SaveAsXml(_movedFigures, _stoppedFigures);
 
-    private void AddRectangle_Click(object sender, RoutedEventArgs e) => AddFigure(new Rectangle(FiguresCanvas));
+    private void AddRectangle_Click(object sender, RoutedEventArgs e)
+    {
+        for(int i = 0; i < 100; i++)
+            AddFigure(new Rectangle(FiguresCanvas));
+    }
+
     private void AddCircle_Click(object sender, RoutedEventArgs e) => AddFigure(new Circle(FiguresCanvas));
     private void AddTriangle_Click(object sender, RoutedEventArgs e) => AddFigure(new Triangle(FiguresCanvas));
     private void ToggleMove_Click(object sender, RoutedEventArgs e)
@@ -154,12 +162,34 @@ public partial class MainWindow : Window
     private void Timer_Tick(object sender, EventArgs e)
     {
         foreach (Figure figure in _movedFigures)
-            figure.Move(FiguresCanvas);
+        {
+            try
+            {
+                figure.Move(FiguresCanvas);
+            }
+            catch (FigureOutOfBoundsException ex)
+            {
+                //File.AppendAllText("log.txt", $"{DateTime.Now}: {ex.Message}\n");
+                figure.FreeFigureOutsideBounds(FiguresCanvas);
+            }
+        }
 
+        Thread thread = new Thread(() =>
+        {
+            lock (_movedFigures)
+            {
+                foreach (Figure figure in _movedFigures)
+                    figure.UpdatePositions(FiguresCanvas);
+            }
+        });
+        thread.Start();
 
         if (_allFigures.Count > 1 && _figuresWithEventsCount > 0)
+        {
             CheckIntersections();
+        }
     }
+
 
     private void ToggleMoveButtonName(object sender, RoutedPropertyChangedEventArgs<object>? e)
     {
